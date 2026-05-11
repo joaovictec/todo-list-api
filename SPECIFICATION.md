@@ -46,3 +46,15 @@
 - Added H2 dependency with runtime scope for embedded database configuration
 - Consolidated test dependencies into spring-boot-starter-test (includes necessary testing libraries)
 - This ensures Spring Boot can auto-configure an embedded H2 database when no other DataSource is defined.
+
+## Step 7: Create the TaskController class
+- Create a class `TaskController` in the package `com.example.taskmanager.controller`
+- Use constructor-based dependency injection to receive TaskService
+- Annotate with @RestController and @RequestMapping("/tasks")
+- Implement REST endpoints:
+    - POST /: create a new task
+    - GET /: get all tasks
+    - PUT /{id}/complete: mark a task as completed
+    - DELETE /{id}: delete a task
+- The controller layer handles HTTP requests, delegates business logic to the service layer, and returns appropriate HTTP responses.
+- Keep controllers free of business logic - they should only handle request/response mapping and delegate to services.
