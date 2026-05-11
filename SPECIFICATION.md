@@ -41,14 +41,8 @@
     - deleteTask(Long id): deletes task by id
 - The service layer contains business logic, orchestrates repository operations, handles transactions (if needed), and keeps the controller layer free of business rules.
 
-## Step 6: Create the TaskController class
-- Create a class `TaskController` in the package `com.example.taskmanager.controller`
-- Use constructor-based dependency injection to receive TaskService
-- Annotate with @RestController and @RequestMapping("/api/tasks")
-- Implement REST endpoints:
-    - POST /: create a new task
-    - GET /: get all tasks
-    - PUT /{id}/complete: mark a task as completed
-    - DELETE /{id}: delete a task
-- The controller layer handles HTTP requests, delegates business logic to the service layer, and returns appropriate HTTP responses.
-- Keep controllers free of business logic - they should only handle request/response mapping and delegate to services.
+## Step 6: Fix pom.xml for H2 database
+- Changed spring-boot-starter-webmvc to spring-boot-starter-web (standard for REST applications)
+- Added H2 dependency with runtime scope for embedded database configuration
+- Consolidated test dependencies into spring-boot-starter-test (includes necessary testing libraries)
+- This ensures Spring Boot can auto-configure an embedded H2 database when no other DataSource is defined.
