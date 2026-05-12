@@ -1,0 +1,54 @@
+package com.example.taskmanager.dto;
+
+/**
+ * DTO for returning task data in responses
+ * Separated from Entity to control what data is exposed
+ */
+public class TaskResponseDTO {
+
+    private Long id;
+    private String title;
+    private boolean completed;
+    private String createdAt; // Using String for simplicity, could use LocalDateTime with proper formatting
+
+    public TaskResponseDTO() {}
+
+    public TaskResponseDTO(Long id, String title, boolean completed, String createdAt) {
+        this.id = id;
+        this.title = title;
+        this.completed = completed;
+        this.createdAt = createdAt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+}

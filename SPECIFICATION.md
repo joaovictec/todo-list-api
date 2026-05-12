@@ -9,45 +9,56 @@ The application follows a layered architecture:
 - **Service Layer**: Contains business logic, coordinates between controller and repository
 - **Repository Layer**: Handles data persistence using Spring Data JPA
 - **Entity Layer**: Represents the data model
+- **DTO Layer**: Data Transfer Objects for request/response validation and decoupling
 
 ## Components
 
 ### Entity: Task
 - id: Long (primary key)
 - title: String
-- description: String
 - completed: Boolean
+- createdAt: LocalDateTime
 
 ### Repository: TaskRepository
 - Extends JpaRepository<Task, Long>
 - Provides CRUD operations for Task entities
 
 ### Service: TaskService
-- Creates tasks: Task createTask(Task task)
-- Retrieves all tasks: List<Task> getAllTasks()
-- Marks task as complete: Task completeTask(Long id)
+- Creates tasks: TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO)
+- Retrieves all tasks: List<TaskResponseDTO> getAllTasks()
+- Marks task as complete: TaskResponseDTO completeTask(Long id)
 - Deletes tasks: void deleteTask(Long id)
 
 ### Controller: TaskController
-- Exposes REST endpoints for task management:
-  - POST /tasks: Create a new task
+- Exposes REST endpoints for task management with validation:
+  - POST /tasks: Create a new task (with @Valid validation)
   - GET /tasks: Retrieve all tasks
   - PUT /tasks/{id}/complete: Mark a task as complete
   - DELETE /tasks/{id}: Delete a task
 
+### DTOs
+- TaskRequestDTO: For incoming task creation requests
+  - title: String (validated with @NotBlank and @Size)
+- TaskResponseDTO: For outgoing task data
+  - id: Long
+  - title: String
+  - completed: Boolean
+  - createdAt: String
+
 ## Endpoints
 - POST /tasks
-  - Request Body: Task object (JSON)
-  - Response: Created Task object (JSON) with HTTP 201
+  - Request Body: TaskRequestDTO (JSON)
+  - Response: Created TaskResponseDTO (JSON) with HTTP 201
+  - Validation: @NotBlank, @Size(max=100) on title
   - Description: Creates a new task
 
 - GET /tasks
-  - Response: List of all Task objects (JSON) with HTTP 200
+  - Response: List of all TaskResponseDTO objects (JSON) with HTTP 200
   - Description: Retrieves all tasks
 
 - PUT /tasks/{id}/complete
   - Path Variable: id (Long)
-  - Response: Updated Task object (JSON) with HTTP 200
+  - Response: Updated TaskResponseDTO (JSON) with HTTP 200
   - Description: Marks the specified task as complete
 
 - DELETE /tasks/{id}
@@ -59,6 +70,7 @@ The application follows a layered architecture:
 - Java 17
 - Spring Boot 3.x
 - Spring Data JPA
+- Spring Validation (Bean Validation)
 - H2 Database
 - Maven
 
@@ -69,7 +81,6 @@ The application follows a layered architecture:
 4. Test endpoints using curl or Postman
 
 ## Future Improvements
-- Add DTOs for request/response validation
 - Implement exception handling
 - Add pagination for GET /tasks
 - Add search/filter capabilities

@@ -1,11 +1,13 @@
 package com.example.taskmanager.service;
 
+import com.example.taskmanager.dto.TaskRequestDTO;
+import com.example.taskmanager.dto.TaskResponseDTO;
 import com.example.taskmanager.entity.Task;
 import com.example.taskmanager.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -16,19 +18,26 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public Task createTask(Task task) {
-        return taskRepository.save(task);
+    public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO) {
+        Task task = new Task();
+        task.setTitle(taskRequestDTO.getTitle());
+        task.setCompleted(false);
+        Task savedTask = taskRepository.save(task);
+        return mapToDTO(savedTask);
     }
 
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public List<TaskResponseDTO> getAllTasks() {
+        return taskRepository.findAll().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Task completeTask(Long id) {
+    public TaskResponseDTO completeTask(Long id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
         task.setCompleted(true);
-        return taskRepository.save(task);
+        Task savedTask = taskRepository.save(task);
+        return mapToDTO(savedTask);
     }
 
     public void deleteTask(Long id) {
@@ -36,5 +45,14 @@ public class TaskService {
             throw new RuntimeException("Task not found with id: " + id);
         }
         taskRepository.deleteById(id);
+    }
+
+    private TaskResponseDTO mapToDTO(Task task) {
+        TaskResponseDTO dto = new TaskResponseDTO();
+        dto.setId(task.getId());
+        dto.setTitle(task.getTitle());
+        dto.setCompleted(task.isCompleted());
+        dto.setCreatedAt(task.getCreatedAt().toString());
+        return dto;
     }
 }
